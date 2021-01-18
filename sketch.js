@@ -2,15 +2,17 @@ const Engine = Matter.Engine;
 const World= Matter.World;
 const Bodies = Matter.Bodies;
 const Constraint = Matter.Constraint;
+const Body = Matter.Body;
 
 var engine, world;
-var box1, pig1,pig3;
-var backgroundImg,platform;
-var bird, slingshot;
+var box1,box2,box3,box4,box5,box6,box7,box8,box9,box10,box11,box12
+var backgroundImg
+var hexagon, slingshot;
 var somevar
 var gameState = "onSling";
 var score 
 var num
+var gameEnd = false;
 function preload() {
     getTime();
 }
@@ -22,65 +24,75 @@ function setup(){
     world = engine.world;
 
     
-    ground = new Ground(600,height,1200,20);
-    platform = new Ground(150, 305, 300, 170);
-
-    box1 = new Box(700,320,70,70);
-    box2 = new Box(920,320,70,70);
-    pig1 = new Pig(810, 350);
-    log1 = new Log(810,260,300, PI/2);
-
-    box3 = new Box(700,240,70,70);
-    box4 = new Box(920,240,70,70);
-    pig3 = new Pig(810, 220);
-
-    log3 =  new Log(810,180,300, PI/2);
-
-    box5 = new Box(810,160,70,70);
-    log4 = new Log(760,120,150, PI/7);
-    log5 = new Log(870,120,150, -PI/7);
-
-    bird = new Bird(200,50);
+    ground = new Ground(600,415,1200,20);
+    
+    box1 = new Box(500,200,40,40);
+    box2 = new Box(535,200,40,40);
+    box3 = new Box(570,200,40,40);
+    box4 = new Box(605,200,40,40);
+    box5 = new Box(640,200,40,40);
+    box6 = new Box(675,200,40,40);
+    box7 = new Box(710,200,40,40);
+    box8 = new Box(745,200,40,40);
+    box9 = new Box(780,200,40,40);
+    box10 = new Box(570,150,60,60);
+    box11 = new Box(630,150,60,60);
+    box12 = new Box(690,150,60,60);
+    box13 = new Box(630,70,70,70);
+    hexagon = new Hexagon(200,250);
 
     //log6 = new Log(230,180,80, PI/2);
-    slingshot = new SlingShot(bird.body,{x:200, y:50});
+    slingshot = new SlingShot(hexagon.body,{x:200, y:250});
     
 }
 
 function draw(){
+    if(gameEnd===false){
+    
     if(somevar){
     background(somevar);
     }
     Engine.update(engine);
-    //strokeWeight(4);
-    box1.display();
-    box2.display();
+
+    hexagon.display();
     ground.display();
-    pig1.display();
-    log1.display();
-
-    box3.display();
-    box4.display();
-    pig3.display();
-    log3.display();
-
-    box5.display();
-    log4.display();
-    log5.display();
-
-    bird.display();
-    platform.display();
-    //log6.display();
+   
     slingshot.display();    
     
     textSize(20);
     fill(255,255,255);
-    score = text("SCORE : "+num,20,50);
+    score = text("SCORE : "+num,20,190);
+
+    box1.display();
+    box2.display();
+    box3.display();
+    box4.display();
+    box5.display();
+    box6.display();
+    box7.display();
+    box8.display();
+    box9.display();
+    box10.display();
+    box11.display();
+    box12.display();
+    box13.display();
+    }else if(gameEnd===true){
+        textSize(30)
+        noStroke();
+        fill("white");
+        text("YOU WON",200,200);
+    }
+    if(num===13||num>13){
+        gameEnd=true;
+    }
 }
 
-function mouseDragged(){
+  
+  
+  
+  function mouseDragged(){
     if (gameState!=="launched"){
-        Matter.Body.setPosition(bird.body, {x: mouseX , y: mouseY});
+        Body.setPosition(hexagon.body, {x: mouseX , y: mouseY});
     }
 }
 
@@ -92,7 +104,10 @@ function mouseReleased(){
 
 function keyPressed(){
     if(keyCode === 32){
-       // slingshot.attach(bird.body);
+       slingshot.attach(hexagon.body);
+       gameState= "onSling";
+       Body.setPosition(hexagon.body,{x:200,y:250})
+       Body.setVelocity(hexagon.body,{x:0,y:0})
     }
 }
 
@@ -102,9 +117,9 @@ async function getTime(){
     var daytime = responseJSON.datetime;
     var hour = daytime.slice(11,13);
     if(hour>=06&&hour<=18){
-        bg = "sprites/bg.png";
+        bg = "bg.png";
     }else{
-        bg = "sprites/bg2.jpg";
+        bg = "bg2.jpg";
     }
     somevar = loadImage(bg);
 }
